@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "name": "ROS: Launch",
+            "type": "ros",
+            "request": "launch",
+            "target": "/home/lawkaho/workshop/frcobot_ws/src/frcobot_ros/ros_control_boilerplate/frrobot_control/launch/fr5v6_hardware.launch"
+        }
+
+    ]
+}

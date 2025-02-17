@@ -9,6 +9,8 @@
     ],
     "files.associations": {
         "*.tcc": "cpp",
-        "string": "cpp"
-    }
+        "string": "cpp",
+        "string_view": "cpp"
+    },
+    "cmake.sourceDirectory": "/home/lawkaho/workshop/frcobot_ws/src/frcobot_ros/fr5v6_moveit_config"
 }

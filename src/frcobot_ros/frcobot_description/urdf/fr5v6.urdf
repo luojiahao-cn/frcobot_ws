@@ -466,7 +466,7 @@
       k_position="15"
       k_velocity="10" />
   </joint>
-  <link
+  <!-- <link
     name="tool_Link">
     <inertial>
       <origin
@@ -534,5 +534,5 @@
       soft_upper_limit="0"
       k_position="0"
       k_velocity="0" />
-  </joint>
+  </joint> -->
 </robot>

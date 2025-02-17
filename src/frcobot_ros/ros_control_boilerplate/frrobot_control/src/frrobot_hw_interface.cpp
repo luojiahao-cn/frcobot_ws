@@ -58,12 +58,23 @@ namespace frrobot_control
       perror("socket() error");
       exit(1);
     }
-
+    ROS_INFO("Try connect to server IP: %s, port: %d", SERVERIP, PORT_CMD);
     if (connect(confd, (struct sockaddr *)&serverSendAddr, sizeof(serverSendAddr)) < 0)
     {
       ROS_INFO("connect() error");
       perror("connect() error");
       exit(1);
+    }
+
+    // 设置接收超时
+    struct timeval timeout;
+    timeout.tv_sec = 2;  // 超时时间（秒）
+    timeout.tv_usec = 0; // 超时时间（微秒）
+    if (setsockopt(confd, SOL_SOCKET, SO_RCVTIMEO, (const char *)&timeout, sizeof(timeout)) < 0)
+    {
+        ROS_ERROR("setsockopt() error");
+        perror("setsockopt() error");
+        exit(1);
     }
 
     ROS_INFO("connected to server");
@@ -126,7 +137,7 @@ namespace frrobot_control
       // printf("read_sendmsg: %s;\n", sendStaLine);
     }
 
-    // ROS_INFO("read");
+    ROS_INFO("read");
 
     int recv_length = 0;
     recvLine[MAXLINE] = '\0';
@@ -138,7 +149,7 @@ namespace frrobot_control
     }
     else
     {
-      // printf("read_recvmsg: %s;\n", recvLine);
+    //   printf("read_recvmsg: %s;\n", recvLine);
       int pos = 0;
       int jointsDataLen = 0;
       std::string tempJoints = recvLine;
@@ -161,7 +172,7 @@ namespace frrobot_control
         joint_position_[joint_id] = joints_sta[joint_id];
         // joint_position_[joint_id] = joint_position_command_[joint_id];
       }
-      // printf("recvmsg: %f,%f,%f,%f,%f,%f", joints_sta[0],joints_sta[1],joints_sta[2],joints_sta[3],joints_sta[4],joints_sta[5]);
+      printf("recvmsg: %f,%f,%f,%f,%f,%f\n", joints_sta[0],joints_sta[1],joints_sta[2],joints_sta[3],joints_sta[4],joints_sta[5]);
     }
   }
 

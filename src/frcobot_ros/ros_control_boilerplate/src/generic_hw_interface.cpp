@@ -28,49 +28,50 @@ namespace ros_control_boilerplate
 
   void GenericHWInterface::init()
   {
-    num_joints_ = joint_names_.size();
+      ROS_INFO_STREAM_NAMED(name_, "GenericHWInterface Init.");
+      num_joints_ = joint_names_.size();
 
-    // Status
-    joint_position_.resize(num_joints_, 0.0);
-    joint_velocity_.resize(num_joints_, 0.0);
-    joint_effort_.resize(num_joints_, 0.0);
+      // Status
+      joint_position_.resize(num_joints_, 0.0);
+      joint_velocity_.resize(num_joints_, 0.0);
+      joint_effort_.resize(num_joints_, 0.0);
 
-    // Command
-    joint_position_command_.resize(num_joints_, 0.0);
-    joint_velocity_command_.resize(num_joints_, 0.0);
-    joint_effort_command_.resize(num_joints_, 0.0);
+      // Command
+      joint_position_command_.resize(num_joints_, 0.0);
+      joint_velocity_command_.resize(num_joints_, 0.0);
+      joint_effort_command_.resize(num_joints_, 0.0);
 
-    // Limits
-    joint_position_lower_limits_.resize(num_joints_, 0.0);
-    joint_position_upper_limits_.resize(num_joints_, 0.0);
-    joint_velocity_limits_.resize(num_joints_, 0.0);
-    joint_effort_limits_.resize(num_joints_, 0.0);
+      // Limits
+      joint_position_lower_limits_.resize(num_joints_, 0.0);
+      joint_position_upper_limits_.resize(num_joints_, 0.0);
+      joint_velocity_limits_.resize(num_joints_, 0.0);
+      joint_effort_limits_.resize(num_joints_, 0.0);
 
-    // Initialize interfaces for each joint
-    for (std::size_t joint_id = 0; joint_id < num_joints_; ++joint_id)
-    {
-      ROS_DEBUG_STREAM_NAMED(name_, "Loading joint name: " << joint_names_[joint_id]);
+      // Initialize interfaces for each joint
+      for (std::size_t joint_id = 0; joint_id < num_joints_; ++joint_id)
+      {
+          ROS_DEBUG_STREAM_NAMED(name_, "Loading joint name: " << joint_names_[joint_id]);
 
-      // Create joint state interface
-      joint_state_interface_.registerHandle(hardware_interface::JointStateHandle(
-          joint_names_[joint_id], &joint_position_[joint_id], &joint_velocity_[joint_id], &joint_effort_[joint_id]));
+          // Create joint state interface
+          joint_state_interface_.registerHandle(hardware_interface::JointStateHandle(
+              joint_names_[joint_id], &joint_position_[joint_id], &joint_velocity_[joint_id], &joint_effort_[joint_id]));
 
-      // Add command interfaces to joints
-      // TODO: decide based on transmissions?
-      hardware_interface::JointHandle joint_handle_position = hardware_interface::JointHandle(
-          joint_state_interface_.getHandle(joint_names_[joint_id]), &joint_position_command_[joint_id]);
-      position_joint_interface_.registerHandle(joint_handle_position);
+          // Add command interfaces to joints
+          // TODO: decide based on transmissions?
+          hardware_interface::JointHandle joint_handle_position = hardware_interface::JointHandle(
+              joint_state_interface_.getHandle(joint_names_[joint_id]), &joint_position_command_[joint_id]);
+          position_joint_interface_.registerHandle(joint_handle_position);
 
-      hardware_interface::JointHandle joint_handle_velocity = hardware_interface::JointHandle(
-          joint_state_interface_.getHandle(joint_names_[joint_id]), &joint_velocity_command_[joint_id]);
-      velocity_joint_interface_.registerHandle(joint_handle_velocity);
+          hardware_interface::JointHandle joint_handle_velocity = hardware_interface::JointHandle(
+              joint_state_interface_.getHandle(joint_names_[joint_id]), &joint_velocity_command_[joint_id]);
+          velocity_joint_interface_.registerHandle(joint_handle_velocity);
 
-      hardware_interface::JointHandle joint_handle_effort = hardware_interface::JointHandle(
-          joint_state_interface_.getHandle(joint_names_[joint_id]), &joint_effort_command_[joint_id]);
-      effort_joint_interface_.registerHandle(joint_handle_effort);
+          hardware_interface::JointHandle joint_handle_effort = hardware_interface::JointHandle(
+              joint_state_interface_.getHandle(joint_names_[joint_id]), &joint_effort_command_[joint_id]);
+          effort_joint_interface_.registerHandle(joint_handle_effort);
 
-      // Load the joint limits
-      registerJointLimits(joint_handle_position, joint_handle_velocity, joint_handle_effort, joint_id);
+          // Load the joint limits
+          registerJointLimits(joint_handle_position, joint_handle_velocity, joint_handle_effort, joint_id);
     } // end for each joint
 
     registerInterface(&joint_state_interface_);    // From RobotHW base class.
@@ -283,14 +284,16 @@ namespace ros_control_boilerplate
         ROS_INFO_STREAM_NAMED(name_, "Waiting for model URDF on the ROS param server at location: " << nh.getNamespace() << param_name);
         nh.getParam(param_name, urdf_string);
       }
-
       usleep(100000);
     }
+
 
     if (!urdf_model_->initString(urdf_string))
       ROS_ERROR_STREAM_NAMED(name_, "Unable to load URDF model");
     else
       ROS_DEBUG_STREAM_NAMED(name_, "Received URDF from param server");
+
+
   }
 
 } // namespace ros_control_boilerplate

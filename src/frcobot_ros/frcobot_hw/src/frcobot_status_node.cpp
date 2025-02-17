@@ -16,7 +16,6 @@ void FrRobotStatusCtrl::initTcp()
     const char *robotIP = (char *)ROBOTIP.c_str();
     if (nh_.hasParam("robot_ip")) {
         ROS_INFO("%s", robotIP);
-        
         ROS_INFO("%d", PORT);
     }
     //Set the server address and listening port through the struct sockaddr_in structure;

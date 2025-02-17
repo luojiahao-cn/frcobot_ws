@@ -5,14 +5,16 @@
         "databaseFilename": "${default}",
         "limitSymbolsToIncludedHeaders": false
       },
-      "includePath": [
-        "/home/lawkaho/workshop/frcobot_ws/devel/include/**",
-        "/opt/ros/noetic/include/**",
-        "/home/lawkaho/workshop/frcobot_ws/src/frcobot_ros/frcobot_camera/include/**",
-        "/home/lawkaho/workshop/frcobot_ws/src/frcobot_ros/frcobot_gripper/include/**",
-        "/home/lawkaho/workshop/frcobot_ws/src/frcobot_ros/frcobot_hw/include/**",
-        "/home/lawkaho/workshop/frcobot_ws/src/frcobot_ros/ros_control_boilerplate/include/**",
-        "/usr/include/**"
+    "includePath": [
+      "${workspaceFolder}/**",
+      "${workspaceFolder}/devel/include/**",
+      "/opt/ros/noetic/include/**",
+      "${workspaceFolder}/src/frcobot_ros/frrobot_control/include/**",
+      "${workspaceFolder}/src/frcobot_ros/frcobot_camera/include/**",
+      "${workspaceFolder}/src/frcobot_ros/frcobot_gripper/include/**",
+      "${workspaceFolder}/src/frcobot_ros/frcobot_hw/include/**",
+      "${workspaceFolder}/src/frcobot_ros/ros_control_boilerplate/include/**",
+      "/usr/include/**"
       ],
       "name": "ROS",
       "intelliSenseMode": "gcc-x64",
