@@ -36,7 +36,7 @@ namespace ros_control_boilerplate
     while (ros::ok())
     {
       update();
-      ROS_INFO("update");
+    //   ROS_INFO("update");
       rate.sleep();
     }
   }

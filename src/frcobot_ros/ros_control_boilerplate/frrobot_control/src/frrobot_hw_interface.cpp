@@ -18,7 +18,7 @@
 
 #define MAXLINE 4096
 #define PORT_CMD 8080
-#define SERVERIP "192.168.31.202"
+// #define SERVERIP "192.168.31.203"
 
 int confd;
 int len;
@@ -44,10 +44,18 @@ namespace frrobot_control
   FrRobotHWInterface::FrRobotHWInterface(ros::NodeHandle &nh, urdf::Model *urdf_model)
       : ros_control_boilerplate::GenericHWInterface(nh, urdf_model)
   {
+    std::string server_ip;
+    if (!nh.getParam("server_ip", server_ip))
+    {
+        ROS_ERROR("Failed to get param 'server_ip'");
+        server_ip = "192.168.31.202";
+        ROS_WARN("Param 'server_ip' not found, using default IP: %s", server_ip.c_str());
+    }
+
     // Set the server address and listening port through the struct sockaddr_in structure;
     memset(&serverSendAddr, 0, sizeof(serverSendAddr));
     serverSendAddr.sin_family = AF_INET;
-    serverSendAddr.sin_addr.s_addr = inet_addr(SERVERIP);
+    serverSendAddr.sin_addr.s_addr = inet_addr(server_ip.c_str());
     serverSendAddr.sin_port = htons(PORT_CMD);
     sendaddr_length = sizeof(serverSendAddr);
 
@@ -58,7 +66,7 @@ namespace frrobot_control
       perror("socket() error");
       exit(1);
     }
-    ROS_INFO("Try connect to server IP: %s, port: %d", SERVERIP, PORT_CMD);
+    ROS_INFO("Try connect to server IP: %s, port: %d", server_ip.c_str(), PORT_CMD);
     if (connect(confd, (struct sockaddr *)&serverSendAddr, sizeof(serverSendAddr)) < 0)
     {
       ROS_INFO("connect() error");
@@ -137,7 +145,7 @@ namespace frrobot_control
       // printf("read_sendmsg: %s;\n", sendStaLine);
     }
 
-    ROS_INFO("read");
+    // ROS_INFO("read");
 
     int recv_length = 0;
     recvLine[MAXLINE] = '\0';
@@ -172,7 +180,7 @@ namespace frrobot_control
         joint_position_[joint_id] = joints_sta[joint_id];
         // joint_position_[joint_id] = joint_position_command_[joint_id];
       }
-      printf("recvmsg: %f,%f,%f,%f,%f,%f\n", joints_sta[0],joints_sta[1],joints_sta[2],joints_sta[3],joints_sta[4],joints_sta[5]);
+    //   printf("recvmsg: %f,%f,%f,%f,%f,%f\n", joints_sta[0],joints_sta[1],joints_sta[2],joints_sta[3],joints_sta[4],joints_sta[5]);
     }
   }
 
