@@ -1,5 +1,4 @@
 <launch>
-
     <!-- 定义启动参数 -->
     <arg name="paused" default="false" />
     <arg name="use_sim_time" default="true" />
@@ -16,30 +15,26 @@
         <arg name="debug" value="$(arg debug)" />
     </include>
 
+    <!-- 加载机器人模型参数 -->
+    <param name="robot_description"
+        textfile="$(find frcobot_description)/urdf/fr5v6_gazebo.urdf" />
 
-        <!-- 加载机器人模型参数 -->
-        <param name="robot_description"
-            textfile="$(find frcobot_description)/urdf/fr5v6_gazebo.urdf" />
+    <!-- 在Gazebo中生成机器人模型 -->
+    <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
+        args="-urdf -model fr5v6 -param robot_description -x 0 -y 0 -z 0" />
 
-        <!-- 在Gazebo中生成机器人模型 -->
-        <node name="urdf_spawner" pkg="gazebo_ros" type="spawn_model"
-            args="-urdf -model fr5v6 -param robot_description -x 0 -y 0 -z 0" />
+    <!-- 加载控制器配置 -->
+    <rosparam ns="/frrobot" command="load"
+        file="$(find ros_control_boilerplate)/frrobot_control/config/frrobot_controllers.yaml" />
 
-        <!-- 加载控制器配置 -->
-        <rosparam
-            file="$(find ros_control_boilerplate)/frrobot_control/config/frrobot_controllers.yaml"
-            command="load" />
+    <!-- 启动机器人状态发布器 -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
+        respawn="false" output="screen" />
 
-        <!-- 启动控制器管理器 -->
-        <node name="ros_control_controller_manager" pkg="controller_manager"
-            type="controller_manager" respawn="false"
-            output="screen"
-            args="spawn joint_state_controller position_trajectory_controller" />
-
-        <!-- 启动机器人状态发布器 -->
-        <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"
-            respawn="false" output="screen" />
-
-
+    <!-- 启动控制器管理器 -->
+    <node name="ros_control_controller_manager" pkg="controller_manager"
+        type="controller_manager" respawn="false"
+        output="screen"
+        args="spawn /frrobot/joint_state_controller /frrobot/position_trajectory_controller" />
 
 </launch>
