@@ -1,37 +1,37 @@
 <?xml version="1.0"?>
 <launch>
 
-    <!-- GDB functionality -->
+    <!-- 定义调试参数 -->
     <arg name="debug" default="false" />
     <arg unless="$(arg debug)" name="launch_prefix" value="" />
     <arg if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
-    <!-- Load example URDF -->
-    <param name="/robot_description" textfile="$(find frcobot_description)/urdf/fr5v6.urdf" />
-
-    <!-- Define IP address arguments for each robot -->
+    <!-- 定义机器人IP地址参数 -->
     <arg name="robot1_ip" default="192.168.31.202" />
     <arg name="robot2_ip" default="192.168.31.203" />
     
     <group ns="frrobot">
-        <!-- Set IP address parameter -->
+        <!-- 加载URDF模型 -->
+        <param name="robot_description" textfile="$(find frcobot_description)/urdf/fr5v6.urdf" />
+
+        <!-- 设置服务器IP地址参数 -->
         <param name="server_ip" value="$(arg robot1_ip)" />
 
-        <!-- Load hardware interface -->
+        <!-- 加载硬件接口 -->
         <node name="frrobot_hardware_interface" pkg="ros_control_boilerplate" type="frrobot_hw_main"
             output="screen" launch-prefix="$(arg launch_prefix)" />
 
-        <!-- Load controller settings -->
+        <!-- 加载控制器配置 -->
         <rosparam
             file="$(find ros_control_boilerplate)/frrobot_control/config/frrobot_controllers.yaml"
             command="load" />
 
-        <!-- Load controller manager -->
+        <!-- 加载控制器管理器 -->
         <node name="ros_control_controller_manager" pkg="controller_manager"
             type="controller_manager" respawn="false"
             output="screen" args="spawn joint_state_controller position_trajectory_controller" />
 
-        <!-- Convert joint states to /tf tranforms -->
+        <!-- 转换关节状态为TF变换 -->
         <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
     </group>
