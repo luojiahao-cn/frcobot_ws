@@ -7,7 +7,7 @@
     <arg if="$(arg debug)" name="launch_prefix" value="gdb --ex run --args" />
 
     <!-- Load example URDF -->
-    <param name="/robot_description" textfile="$(find frcobot_description)/urdf/fr5v6.urdf" />
+
 
     <!-- Define IP address arguments for each robot -->
     <arg name="robot1_ip" default="192.168.31.202" />
@@ -15,9 +15,11 @@
 
     <!-- Group for the first robot -->
     <group ns="robot1">
+        <!-- Set the robot description parameter -->
+        <param name="/robot_description" textfile="$(find frcobot_description)/urdf/fr5v6.urdf" />
         <!-- Set IP address parameter -->
         <param name="server_ip" value="$(arg robot1_ip)" />
-        
+
         <!-- Load hardware interface with IP address -->
         <node name="frrobot_hardware_interface" pkg="ros_control_boilerplate" type="frrobot_hw_main"
             output="screen" launch-prefix="$(arg launch_prefix)" />
@@ -34,15 +36,16 @@
 
         <!-- Convert joint states to /tf transforms -->
         <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
-            <param name="~tf_prefix" value="robot1/" />
+            <param name="tf_prefix" value="robot1" />
         </node>
     </group>
 
     <!-- Group for the second robot -->
     <group ns="robot2">
+        <param name="/robot_description" textfile="$(find frcobot_description)/urdf/fr5v6.urdf" />
         <!-- Set IP address parameter -->
         <param name="server_ip" value="$(arg robot2_ip)" />
-        
+
         <!-- Load hardware interface with IP address -->
         <node name="frrobot_hardware_interface" pkg="ros_control_boilerplate" type="frrobot_hw_main"
             output="screen" launch-prefix="$(arg launch_prefix)" />
@@ -59,7 +62,7 @@
 
         <!-- Convert joint states to /tf transforms -->
         <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher">
-            <param name="~tf_prefix" value="robot2/" />
+            <param name="tf_prefix" value="robot2" />
         </node>
     </group>
 
